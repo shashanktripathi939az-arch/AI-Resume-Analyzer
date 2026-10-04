@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Resume check</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="ra-root">
+    <header class="ra-head">
+      <h1>Resume check</h1>
+      <p>Upload a PDF or image of your resume, or paste the text. Get a score, a marked-up copy and a short list of fixes. Your file never leaves this page.</p>
+    </header>
+
+    <main class="ra-grid">
+      <!-- Input -->
+      <section class="ra-panel" aria-label="Resume input">
+        <div class="ra-drop" id="dropzone">
+          <input id="fileInput" type="file" hidden
+                 accept=".pdf,application/pdf,image/png,image/jpeg,image/webp,.txt,.md,text/plain" />
+          <div id="dropIdle">
+            <p class="ra-drop-title">Drop your resume here</p>
+            <p class="ra-sub">PDF, or a photo or screenshot (PNG, JPG, WebP). Up to 10 MB.</p>
+            <button class="ra-secondary" id="chooseBtn" type="button">Choose file</button>
+            <p class="ra-file" id="fileNote" hidden></p>
+          </div>
+          <div class="ra-progress" id="dropBusy" role="status" hidden>
+            <p id="busyLabel">Starting</p>
+            <div class="ra-bar" role="presentation"><div class="ra-bar-fill" id="busyFill" style="background:var(--ink);width:0"></div></div>
+          </div>
+        </div>
+
+        <div class="ra-row">
+          <label for="resume" class="ra-label">Resume text</label>
+          <div class="ra-actions">
+            <button class="ra-link" id="sampleBtn" type="button">Use sample</button>
+            <button class="ra-link" id="clearBtn" type="button" hidden>Clear</button>
+          </div>
+        </div>
+        <textarea id="resume" class="ra-textarea" rows="14"
+          placeholder="Extracted text appears here, or paste it yourself.&#10;Start achievements with “-” or “•” so bullets are detected."></textarea>
+
+        <button class="ra-toggle" id="jdToggle" type="button" aria-expanded="false">Compare against a job description</button>
+        <textarea id="jd" class="ra-textarea ra-jd" rows="7" hidden aria-label="Job description"
+          placeholder="Paste the job description to see which keywords your resume covers."></textarea>
+
+        <p class="ra-error" id="error" role="alert" hidden></p>
+        <button class="ra-primary" id="analyzeBtn" type="button">Analyze resume</button>
+      </section>
+
+      <!-- Results -->
+      <section class="ra-results" aria-live="polite">
+        <div class="ra-empty" id="empty">
+          <p class="ra-empty-title">Nothing analyzed yet</p>
+          <p>Add your resume on the left, then select Analyze resume. Or try the sample to see how the marked-up view works.</p>
+          <ul class="ra-legend">
+            <li><mark class="ra-mark ra-verb">Built</mark> strong action verb</li>
+            <li><mark class="ra-mark ra-metric">42%</mark> measurable result</li>
+            <li><mark class="ra-mark ra-weak">worked on</mark> vague phrase to replace</li>
+          </ul>
+        </div>
+
+        <div id="report" hidden>
+          <div class="ra-score-card">
+            <div id="ring"></div>
+            <div>
+              <p class="ra-grade" id="grade"></p>
+              <p class="ra-stats" id="stats"></p>
+            </div>
+          </div>
+
+          <div class="ra-block">
+            <h2>Score breakdown</h2>
+            <div id="breakdown"></div>
+          </div>
+
+          <div class="ra-block">
+            <h2>What to change</h2>
+            <ul class="ra-findings" id="findings"></ul>
+          </div>
+
+          <div class="ra-block" id="matchBlock" hidden>
+            <h2 id="matchTitle"></h2>
+            <p class="ra-sub">Found in your resume</p>
+            <div class="ra-chips" id="hitChips"></div>
+            <p class="ra-sub">Missing. Add the ones that are true for you.</p>
+            <div class="ra-chips" id="missChips"></div>
+          </div>
+
+          <div class="ra-block">
+            <h2>Marked-up resume</h2>
+            <ul class="ra-legend ra-legend-inline">
+              <li><mark class="ra-mark ra-verb">verb</mark></li>
+              <li><mark class="ra-mark ra-metric">result</mark></li>
+              <li><mark class="ra-mark ra-weak">vague</mark></li>
+            </ul>
+            <div class="ra-paper" id="paper"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Libraries (loaded from CDN; UMD builds so this works without a bundler) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
+  <!-- App code -->
+  <script src="analyzer.js"></script>
+  <script src="extract.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
